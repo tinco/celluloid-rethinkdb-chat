@@ -1,0 +1,50 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    celluloid (0.16.0)
+      timers (~> 4.0.0)
+    celluloid-io (0.16.2)
+      celluloid (>= 0.16.0)
+      nio4r (>= 1.1.0)
+    celluloid-websocket (0.0.7)
+      celluloid
+      celluloid-io
+      http
+      rack
+      websocket-driver (>= 0.5.1)
+    connection_pool (2.1.1)
+    daemon_controller (1.2.0)
+    ddp-server (0.0.4)
+      celluloid-websocket (~> 0.0.7)
+    ddp-server-rethinkdb (0.0.2)
+      connection_pool
+      ddp-server (>= 0.0.3)
+      rethinkdb
+    form_data (0.1.0)
+    hitimes (1.2.2)
+    http (0.7.1)
+      form_data (~> 0.1.0)
+      http_parser.rb (~> 0.6.0)
+    http_parser.rb (0.6.0)
+    json (1.8.2)
+    nio4r (1.1.0)
+    passenger (4.0.59)
+      daemon_controller (>= 1.2.0)
+      rack
+      rake (>= 0.8.1)
+    rack (1.6.0)
+    rake (10.4.2)
+    rethinkdb (1.16.0.1)
+      json
+    timers (4.0.1)
+      hitimes
+    websocket-driver (0.5.3)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ddp-server-rethinkdb (>= 0.0.2)
+  passenger (>= 4.0.58)
