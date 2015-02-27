@@ -25,8 +25,6 @@ class Messager < DDP::Server::RethinkDB::API
 end
 
 config = {
-	connection_pool_size: 8,
-	connection_pool_timeout: 5,
 	host: 'localhost',
 	port: 28_015,
 	database: 'message'

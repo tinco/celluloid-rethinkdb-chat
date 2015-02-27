@@ -7,8 +7,81 @@
   <body>
     <div id="example"></div>
     <script type="text/jsx">
+      var ChatView = React.createClass({
+        getInitialState: function() {
+          return {data: []};
+        },
+        componentDidMount: function() {
+          this.loadLines();
+        },
+        loadLines: function() {
+          $.ajax({
+            url: this.props.url,
+            dataType: 'json',
+            success: function(data) {
+              this.setState({data: data});
+            }.bind(this),
+            error: function(xhr, status, err) {
+              console.error(this.props.url, status, err.toString());
+            }.bind(this)
+          });
+        },
+        render: function() {
+          return (
+            <div className="chatView">
+              <h1>Chat</h1>
+              <ChatBox data={this.state.data} />
+              <ChatInput />
+            </div>
+          );
+        }
+      });
+
+      var ChatLine = React.createClass({
+        render: function() {
+          return (
+            <li>
+              <span className="chatLineAuthor">
+                {this.props.author}
+              </span>
+              {this.props.children}
+            </li>
+          );
+        }
+      });
+
+      var ChatBox = React.createClass({
+        render: function() {
+          var lineNodes = this.props.data.map(function(line) {
+            return ( <ChatLine author={line.author}>{line.text}</ChatLine> )
+          });
+          return (
+            <div class="chatBox">
+              <ol>
+                {lineNodes}
+              </ol>
+            </div>
+          );
+        }
+      });
+
+      var ChatInput = React.createClass({
+        render: function() {
+          return (
+            <div className="chatInput">
+              Hello, world! I am a ChatInput.
+            </div>
+          );
+        }
+      });
+
+      var data = [
+        {author: "Pete Hunt", text: "This really is one comment"},
+        {author: "Jordan Walke", text: "This is *another* comment"}
+      ];
+
       React.render(
-        <h1>Hello, world!</h1>,
+        <ChatView data={data} />,
         document.getElementById('example')
       );
     </script>
