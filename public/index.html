@@ -3,6 +3,7 @@
   <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
+    <script src="ddp.js"></script>
   </head>
   <body>
     <div id="example"></div>
@@ -14,16 +15,40 @@
         componentDidMount: function() {
           this.loadLines();
         },
+
         loadLines: function() {
-          $.ajax({
-            url: this.props.url,
-            dataType: 'json',
-            success: function(data) {
-              this.setState({data: data});
-            }.bind(this),
-            error: function(xhr, status, err) {
-              console.error(this.props.url, status, err.toString());
-            }.bind(this)
+          var options = {
+            endpoint: "ws://localhost:3000/websocket",
+            SocketConstructor: WebSocket
+          };
+
+          var ddp = this.ddp = new DDP(options);
+          var self = this;
+          ddp.on("connected", function() {
+            console.log("Connected to DDP Server")
+            ddp.sub("messages");
+            ddp.on("added", function (data) {
+              console.log("Got data", data)
+              var state = self.state;
+              state.data.push(data.fields);
+              self.setState(state);
+            });
+          });
+
+          // $.ajax({
+          //   url: this.props.url,
+          //   dataType: 'json',
+          //   success: function(data) {
+          //     this.setState({data: data});
+          //   }.bind(this),
+          //   error: function(xhr, status, err) {
+          //     console.error(this.props.url, status, err.toString());
+          //   }.bind(this)
+          // });
+        },
+        handleChatLineSubmit: function(text) {
+          this.ddp.method('send_message', text, function(result) {
+            console.log("Got sendmessage result:", result)
           });
         },
         render: function() {
@@ -31,7 +56,7 @@
             <div className="chatView">
               <h1>Chat</h1>
               <ChatBox data={this.state.data} />
-              <ChatInput />
+              <ChatInput onChatLineSubmit={this.handleChatLineSubmit} />
             </div>
           );
         }
@@ -66,11 +91,21 @@
       });
 
       var ChatInput = React.createClass({
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var text = this.refs.text.getDOMNode().value.trim();
+          if (!text) {
+            return;
+          }
+          this.props.onChatLineSubmit(text);
+          this.refs.text.getDOMNode().value = '';
+        },
         render: function() {
           return (
-            <div className="chatInput">
-              Hello, world! I am a ChatInput.
-            </div>
+            <form className="chatInput" onSubmit={this.handleSubmit}>
+              <input type="text" ref="text" placeholder="Say something..." />
+              <input type="submit" value="Post" />
+            </form>
           );
         }
       });

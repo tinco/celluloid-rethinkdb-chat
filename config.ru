@@ -13,7 +13,7 @@ class Messager < DDP::Server::RethinkDB::API
 	module RPC
 		def send_message(message)
 			with_connection do |conn|
-				table('messages').insert(from: name, message: message).run(conn)
+				table('messages').insert(author: name, text: message).run(conn)
 			end
 		end
 	end
@@ -25,6 +25,8 @@ class Messager < DDP::Server::RethinkDB::API
 end
 
 config = {
+	connection_pool_size: 8,
+	connection_pool_timeout: 5,
 	host: 'localhost',
 	port: 28_015,
 	database: 'message'
