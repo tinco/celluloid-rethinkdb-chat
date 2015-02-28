@@ -4,9 +4,81 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.12.2/JSXTransformer.js"></script>
     <script src="ddp.js"></script>
+    <style>
+    body {
+      font-family: proxima-nova,"Helvetica Neue",Helvetica,Roboto,Arial,sans-serif;
+    }
+
+    html, body { height: 100%; }
+    * { margin: 0; padding: 0; }
+
+    .chatView {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      height: 100%;
+      background-color: #2ecc71;
+    }
+
+    .chatView > * {
+      width: 100%;
+    }
+
+    .chatView > .header {
+      flex: 0 0 auto;
+      background-color: #ecf0f1;
+    }
+
+    .chatView > .header > h1 {
+      padding: 10px;
+      padding-left: 15px;
+      padding-right: 15px;
+      margin: 5px;
+      line-height: 30px;
+      font-size: 30px;
+      background-color: #fefefe;
+      text-transform: uppercase;
+      display: inline-block;
+    }
+
+    .chatView > .chatBox {
+      flex: 1 1 auto;
+      background-color: #fefefe;
+    }
+
+    .chatView > .chatBox > ol {
+      list-style: none;
+      height: 100%;
+      padding: 5px;
+    }
+
+    .chatView > .chatBox > ol > li {
+      width: 100%;
+      font-size: 15px;
+      line-height: 15px;
+    }
+
+    .chatView > .chatBox > ol > li > .author {
+      font-weight: bold;
+    }
+
+   .chatView > .chatBox > ol > li > .author::after {
+      content: '>';
+      margin-right: 5px;
+    }
+
+    .chatView > .chatInput {
+      flex: 0 0 auto;
+    }
+
+    .chatView > .chatInput > input {
+      line-height: 20px;
+      font-size: 20px;
+      width: 100%;
+    }
+    </style>
   </head>
-  <body>
-    <div id="example"></div>
+  <body id="content">
     <script type="text/jsx">
       var ChatView = React.createClass({
         getInitialState: function() {
@@ -28,7 +100,6 @@
             console.log("Connected to DDP Server")
             ddp.sub("messages");
             ddp.on("added", function (data) {
-              console.log("Got data", data)
               var state = self.state;
               state.data.push(data.fields);
               self.setState(state);
@@ -47,14 +118,12 @@
           // });
         },
         handleChatLineSubmit: function(text) {
-          this.ddp.method('send_message', text, function(result) {
-            console.log("Got sendmessage result:", result)
-          });
+          this.ddp.method('send_message', text, function() {});
         },
         render: function() {
           return (
             <div className="chatView">
-              <h1>Chat</h1>
+              <div className="header"><h1>Chatbox</h1></div>
               <ChatBox data={this.state.data} />
               <ChatInput onChatLineSubmit={this.handleChatLineSubmit} />
             </div>
@@ -66,7 +135,7 @@
         render: function() {
           return (
             <li>
-              <span className="chatLineAuthor">
+              <span className="author">
                 {this.props.author}
               </span>
               {this.props.children}
@@ -78,10 +147,10 @@
       var ChatBox = React.createClass({
         render: function() {
           var lineNodes = this.props.data.map(function(line) {
-            return ( <ChatLine author={line.author}>{line.text}</ChatLine> )
+            return ( <ChatLine author={line.author} key={line.id}>{line.text}</ChatLine> )
           });
           return (
-            <div class="chatBox">
+            <div className="chatBox">
               <ol>
                 {lineNodes}
               </ol>
@@ -103,21 +172,15 @@
         render: function() {
           return (
             <form className="chatInput" onSubmit={this.handleSubmit}>
-              <input type="text" ref="text" placeholder="Say something..." />
-              <input type="submit" value="Post" />
+              <input autoFocus type="text" ref="text" placeholder="..." />
             </form>
           );
         }
       });
 
-      var data = [
-        {author: "Pete Hunt", text: "This really is one comment"},
-        {author: "Jordan Walke", text: "This is *another* comment"}
-      ];
-
       React.render(
-        <ChatView data={data} />,
-        document.getElementById('example')
+        <ChatView />,
+        document.getElementById('content')
       );
     </script>
   </body>
