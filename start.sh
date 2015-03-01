@@ -6,11 +6,11 @@ else
 fi
 
 bundle exec passenger start &
-PASSENGER_PID = $1
+PASSENGER_PID=$1
 
 if hash rethinkdb 2>/dev/null; then
     rethinkdb &
-    RETHINKDB_PID = $!
+    RETHINKDB_PID=$!
 else
     kill $PASSENGER_PID
     echo "Could not find rethinkdb"
