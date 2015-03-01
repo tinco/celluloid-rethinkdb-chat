@@ -15,7 +15,6 @@
     .chatView {
       display: flex;
       flex-direction: column;
-      flex-wrap: wrap;
       height: 100%;
       background-color: #2ecc71;
     }
@@ -44,11 +43,11 @@
     .chatView > .chatBox {
       flex: 1 1 auto;
       background-color: #fefefe;
+      overflow: auto;
     }
 
     .chatView > .chatBox > ol {
       list-style: none;
-      height: 100%;
       padding: 5px;
     }
 
@@ -105,17 +104,6 @@
               self.setState(state);
             });
           });
-
-          // $.ajax({
-          //   url: this.props.url,
-          //   dataType: 'json',
-          //   success: function(data) {
-          //     this.setState({data: data});
-          //   }.bind(this),
-          //   error: function(xhr, status, err) {
-          //     console.error(this.props.url, status, err.toString());
-          //   }.bind(this)
-          // });
         },
         handleChatLineSubmit: function(text) {
           this.ddp.method('send_message', text, function() {});
@@ -145,6 +133,9 @@
       });
 
       var ChatBox = React.createClass({
+        componentDidUpdate: function() {
+          this.getDOMNode().scrollTop = this.getDOMNode().scrollHeight;
+        },
         render: function() {
           var lineNodes = this.props.data.map(function(line) {
             return ( <ChatLine author={line.author} key={line.id}>{line.text}</ChatLine> )
