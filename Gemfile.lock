@@ -6,7 +6,7 @@ GEM
     celluloid-io (0.16.2)
       celluloid (>= 0.16.0)
       nio4r (>= 1.1.0)
-    celluloid-websocket (0.0.8)
+    celluloid-websocket (0.0.9)
       celluloid
       celluloid-io
       http
@@ -16,7 +16,8 @@ GEM
     daemon_controller (1.2.0)
     ddp-server (0.0.4)
       celluloid-websocket (~> 0.0.7)
-    ddp-server-rethinkdb (0.0.3)
+    ddp-server-rethinkdb (0.0.4)
+      celluloid-websocket (>= 0.0.9)
       connection_pool
       ddp-server (>= 0.0.4)
       rethinkdb
@@ -48,6 +49,5 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  celluloid-websocket (>= 0.0.8)
-  ddp-server-rethinkdb (>= 0.0.3)
+  ddp-server-rethinkdb (>= 0.0.4)
   passenger (>= 4.0.58)
