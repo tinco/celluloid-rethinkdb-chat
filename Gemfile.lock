@@ -14,18 +14,16 @@ GEM
       websocket-driver (>= 0.5.1)
     connection_pool (2.1.1)
     daemon_controller (1.2.0)
-    ddp-server (0.0.4)
+    ddp-server (0.0.5)
       celluloid-websocket (~> 0.0.7)
     ddp-server-rethinkdb (0.0.4)
       celluloid-websocket (>= 0.0.9)
       connection_pool
       ddp-server (>= 0.0.4)
       rethinkdb
-    form_data (0.1.2)
-      http-form_data
     hitimes (1.2.2)
-    http (0.7.1)
-      form_data (~> 0.1.0)
+    http (0.7.2)
+      http-form_data (~> 1.0.0)
       http_parser.rb (~> 0.6.0)
     http-form_data (1.0.0)
     http_parser.rb (0.6.0)
@@ -49,5 +47,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  ddp-server (>= 0.0.5)
   ddp-server-rethinkdb (>= 0.0.4)
   passenger (>= 4.0.58)
