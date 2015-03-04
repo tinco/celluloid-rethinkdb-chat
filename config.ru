@@ -5,7 +5,7 @@ class Messager < DDP::Server::RethinkDB::API
 	# Define a module named Collections that exposes subscribable rethinkdb queries
 	module Collections
 		def messages
-			table('messages')
+			table('messages').order_by(:index => 'time')
 		end
 	end
 
@@ -13,7 +13,7 @@ class Messager < DDP::Server::RethinkDB::API
 	module RPC
 		def send_message(message)
 			with_connection do |conn|
-				table('messages').insert(author: name, text: message).run(conn)
+				table('messages').insert(author: name, text: message, time: Time.now).run(conn)
 			end
 		end
 	end
