@@ -6,7 +6,7 @@ else
 fi
 
 bundle exec passenger start &
-PASSENGER_PID=$1
+PASSENGER_PID=$!
 
 if hash rethinkdb 2>/dev/null; then
     rethinkdb &
