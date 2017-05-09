@@ -9,4 +9,4 @@ Run `./start.sh`
 
 Screenshot
 =====
-![Alt text](/screenshot.png?raw=true “ChatBox example with 4 clients”)
+![ChatBox example with 4 clients](/screenshot.png?raw=true)
